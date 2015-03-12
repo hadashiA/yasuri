@@ -7,13 +7,18 @@ var signinScene = function() {
   $('.signin-scene').show();
 };
 
-var uploadScene = function() {
-  var $button   = $('.uploader button'),
+var uploadScene = function(user) {
+  var $user = $('.user'),
+      $button   = $('.uploader button'),
       $input    = $('.uploader input[type=file]'),
       $products = $('.products'),
       button    = Ladda.create($button[0]);
 
   $('.scene').hide();
+
+  $user.find('.user-name').text(user.name);
+  $user.find('.user-avatar').prop('src', user.avatarUrl);
+
   $('.upload-scene').show();
 
   $input.on('change', function(e) {
@@ -31,9 +36,9 @@ $(function() {
   var $indicator = $('#indicator');
 
   suzuri.currentUser()
-    .then(function() {
+    .then(function(user) {
       $indicator.hide();
-      uploadScene();
+      uploadScene(user);
     })
     .catch(function() {
       $indicator.hide();

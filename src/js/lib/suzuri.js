@@ -30,7 +30,7 @@ var request = function(method, path, data) {
       headers: { 'Authorization': 'Bearer ' + token }
     })
       .done(function(res) {
-        resolve(res.responseJSON);
+        resolve(res);
       })
       .fail(function(res) {
         reject(res.status);
@@ -39,5 +39,8 @@ var request = function(method, path, data) {
 };
 
 exports.currentUser = function() {
-  return request('GET', 'user');
+  return request('GET', 'user')
+    .then(function(data) {
+      return data.user;
+    });
 };

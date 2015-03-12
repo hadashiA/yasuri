@@ -1,8 +1,13 @@
-ENTRY		= src/js/index.js
 BUILD_DIR 	= public/js
 BUNDLE 		= $(BUILD_DIR)/bundle.js
+ENTRY		= src/js/index.js
 
-.PHONY: all clean watch
+SRC = $(ENTRY)
+ifneq ($(wildcard src/js/lib),)
+  SRC += $(shell find src/js/lib -type f -name '*.js')
+endif
+
+.PHONY: all clean info watch
 
 all: $(BUNDLE)
 
