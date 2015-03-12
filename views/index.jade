@@ -5,19 +5,19 @@ html
     link(rel="stylesheet", href="/css/app.css")
   body
     h1 YASURI
-
     div#indicator
       img(src="/img/indicator.gif")
 
     section.scene.upload-scene
       p.user
+        span Hello&nbsp;
         span.user-name
         img.user-avatar(width="30", height="30")
-      p
-      section.uploader
+      div.uploader
         input(type="file", style="display:none")
         button.ladda-button(data-style="expand-right", data-color="red", data-size="xl")
           span.ladda-label +UPLOAD
+        p Animated GIF here
       section.result
         ul.products
     section.scene.signin-scene
