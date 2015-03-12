@@ -1,6 +1,26 @@
 html
   head
     title SUZURI gif
+    link(rel="stylesheet", href="/css/ladda.min.css")
+    link(rel="stylesheet", href="/css/app.css")
   body
     h1 SUZURI gif
-    a(href="#{authorizeUrl}") Sign in SUZURI
+
+    div#indicator
+      img(src="/img/indicator.gif")
+
+    section.scene.upload-scene
+      p
+        span= "Hello, #{user.name}"
+        img.avatar(width="30", height="30")
+      p
+      section.uploader
+        input(type="file", style="display:none")
+        button.ladda-button(data-style="expand-right", data-color="red", data-size="xl")
+          span.ladda-label +UPLOAD
+      section.result
+        ul.products
+    section.scene.signin-scene
+      a(href="#{authorizeUrl}") Please sign in SUZURI
+
+    script(src="/js/bundle.js")
