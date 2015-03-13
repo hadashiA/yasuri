@@ -13,12 +13,6 @@ var CLIENT_ID     = process.env.CLIENT_ID,
     CLIENT_SECRET = process.env.CLIENT_SECRET,
     CALLBACK_URI  = process.env.CALLBACK_URI;
 
-console.log({
-  CLIENT_ID:     CLIENT_ID,
-  CLIENT_SECRET: CLIENT_SECRET,
-  CALLBACK_URI:  CALLBACK_URI
-});
-
 var oauth = new OAuth2(
   CLIENT_ID, CLIENT_SECRET,
   'https://suzuri.jp', '/oauth/authorize', '/oauth/token',
