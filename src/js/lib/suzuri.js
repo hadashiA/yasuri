@@ -14,21 +14,28 @@ var getToken = function() {
   return null;
 };
 
-var request = function(method, path, data) {
+var request = exports.request = function(method, path, data) {
   var token = getToken();
   
   return new Promise(function(resolve, reject) {
+    var options = {
+      type: method,
+      dataType: 'json',
+      url: endpoint + path,
+      headers: { 'Authorization': 'Bearer ' + token }
+    };
+
     if (token === null) {
       reject();
     }
 
-    $.ajax({
-      type: method,
-      dataType: 'json',
-      url: endpoint + path,
-      data: data,
-      headers: { 'Authorization': 'Bearer ' + token }
-    })
+    if (method == 'GET') {
+      options.data = data;
+    } else {
+      options.data = JSON.stringify(data);
+      options.contentType = 'application/json';
+    }
+    $.ajax(options)
       .done(function(res) {
         resolve(res);
       })
@@ -36,11 +43,4 @@ var request = function(method, path, data) {
         reject(res.status);
       });
   });
-};
-
-exports.currentUser = function() {
-  return request('GET', 'user')
-    .then(function(data) {
-      return data.user;
-    });
 };

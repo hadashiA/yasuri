@@ -1,3 +1,24 @@
 .scene {
   display: none;
 }
+
+#message-tape {
+  /* top: 50%; */
+  background: #f1c40f;
+  color: #fff;
+  text-align: center;
+  z-index: 1200 !important;
+  vertical-align: middle;
+  position: absolute;
+  width: 100%;
+  opacity: 0.7;
+  transition: height 250ms;
+}
+
+#message-tape p {
+  padding: 0.5em 2em;
+}
+
+#message-tape.error {
+  background: #f00;
+}
