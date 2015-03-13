@@ -3,15 +3,19 @@ var $ = require('jquery');
 var endpoint = 'https://suzuri.jp/api/v1/';
 
 var getToken = function() {
-  var cookie = document.cookie,
+  var localStorage = window.localStorage,
+      token        = (localStorage && localStorage.getItem('token')),
+      cookie       = document.cookie,
       match;
-  if (cookie) {
+
+  if (!token && cookie) {
     match = cookie.match(/token=([\da-z]+)/i);
     if (match) {
-      return match[1];
+      token = match[1];
+      localStorage.setItem('key', token);
     }
   }
-  return null;
+  return token;
 };
 
 var request = exports.request = function(method, path, data) {

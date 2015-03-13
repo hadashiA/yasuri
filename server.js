@@ -1,4 +1,5 @@
 var fs          = require('fs'),
+    http        = require('http'),
     https       = require('https'),
     path        = require('path'),
     express     = require('express'),
@@ -17,9 +18,18 @@ console.log({
   CLIENT_SECRET: CLIENT_SECRET,
   CALLBACK_URI:  CALLBACK_URI
 });
-var oauth = new OAuth2(CLIENT_ID, CLIENT_SECRET,
-                       'https://suzuri.jp', '/oauth/authorize', '/oauth/token',
-                       null);
+
+var oauth = new OAuth2(
+  CLIENT_ID, CLIENT_SECRET,
+  'https://suzuri.jp', '/oauth/authorize', '/oauth/token',
+  null);
+
+var authorizeUrl = oauth.getAuthorizeUrl({
+  redirect_uri: CALLBACK_URI,
+  scope: 'read write',
+  response_type: 'code'
+});
+
 var app = express();
 
 app.use(compression());
@@ -30,11 +40,6 @@ app.set('view engine', 'jade');
 app.set('views', './views');
 
 app.get('/', function(req, res) {
-  authorizeUrl = oauth.getAuthorizeUrl({
-    redirect_uri: CALLBACK_URI,
-    scope: 'read write',
-    response_type: 'code'
-  });
   res.render('index', { authorizeUrl: authorizeUrl });
 });
 
@@ -44,15 +49,20 @@ app.get('/callback', function(req, res) {
     grant_type: "authorization_code",
     redirect_uri: CALLBACK_URI
   }, function(e, token) {
-    res.cookie('token', token, { maxAge: 900000 });
+    res.cookie('token', token, { secure: true });
     res.redirect('/');
   });
 });
 
-var server = https.createServer({
-  key: fs.readFileSync('./test/fixtures/keys/key.pem'),
-  cert: fs.readFileSync('./test/fixtures/keys/cert.pem')
-}, app);
+var server;
+if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') {
+  server = https.createServer({
+    key: fs.readFileSync('./test/fixtures/keys/key.pem'),
+    cert: fs.readFileSync('./test/fixtures/keys/cert.pem')
+  }, app);
+} else {
+  server = http.createServer(app);
+}
 
 server.maxConnections = process.env.MAX_CONNECTIONS || 10;
 server.listen(app.get("port"), function() {
