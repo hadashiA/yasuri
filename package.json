@@ -22,7 +22,7 @@
     "gm": "^1.17.0",
     "jade": "^1.9.2",
     "jquery": "^2.1.3",
-    "ladda": "^0.9.7",
+    "ladda": "git://github.com:hakimel/Ladda.git#ce268b054f9495e0e2265bb95a88c5803cf15e39",
     "morgan": "^1.5.1",
     "oauth": "^0.9.12",
     "serve-favicon": "^2.2.0",

@@ -1,5 +1,5 @@
 var $      = require('jquery'),
-    Ladda  = require('./Ladda/dist/ladda.min'),
+    Ladda  = require('ladda'),
     suzuri = require('./lib/suzuri');
 
 var signinScene = function() {
