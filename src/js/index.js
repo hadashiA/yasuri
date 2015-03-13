@@ -96,13 +96,13 @@ var uploadScene = function(user) {
           (function() {
             var frameNumber = i,
                 dataURL = canvas.toDataURL();
-            promise = promise
-              .then(function() {
-                return startCreateMaterialFromFrame(file.name, frameNumber, dataURL);
-              })
-              .then(function() {
-                button.setProgress((i + 1) / length);
-              });
+            promise = promise.then(function() {
+              return startCreateMaterialFromFrame(file.name, frameNumber, dataURL);
+            });
+
+            promise.then(function() {
+              button.setProgress((i + 1) / length);
+            });
 
             if (i >= (length - 1)) {
               promise.then(function() {
