@@ -27,11 +27,5 @@
     "oauth": "^0.9.12",
     "serve-favicon": "^2.2.0",
     "serve-static": "^1.9.1"
-  },
-  "devDependencies": {
-    "browserify-shim": "^3.8.3"
-  },
-  "browserify-shim": {
-    "./vendor/js/libgif.js": "SuperGif"
   }
 }
