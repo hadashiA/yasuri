@@ -96,18 +96,21 @@ var uploadScene = function(user) {
           (function() {
             var frameNumber = i,
                 dataURL = canvas.toDataURL();
-            promise.then(function() {
-              return startCreateMaterialFromFrame(file.name, frameNumber, dataURL);
-            })
+            promise = promise
+              .then(function() {
+                return startCreateMaterialFromFrame(file.name, frameNumber, dataURL);
+              })
               .then(function() {
                 button.setProgress((i + 1) / length);
-                if (i >= (length - 1)) {
-                  $('.jsgif').hide();
-                  $previewImg.show();
-                  button.stop();
-                }
               });
 
+            if (i >= (length - 1)) {
+              promise.then(function() {
+                $('.jsgif').hide();
+                $previewImg.show();
+                button.stop();
+              });
+            }
             gif.move_relative(1);
           })();
         }
