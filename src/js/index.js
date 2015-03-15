@@ -9,7 +9,7 @@ class Profile extends React.Component {
       <p className="user">
         <span>Hello </span>
         <span>{this.props.user.name}</span>
-        <img src="{this.props.user.avatarUrl}" width="30" height="30" />
+        <img src={this.props.user.avatarUrl} width="30" height="30" />
       </p>
     );
   }
@@ -18,15 +18,15 @@ class Profile extends React.Component {
 class UploadLayout extends React.Component {
   render() {
     return (
-      <section>
+      <div>
         <Profile user={this.props.user} />
-        <div className="uploader">
-          <input type="file" style="display:none" />
+        <form className="uploader">
+          <input type="file" />
           <button className="ladda-button" data-style="expand-right" data-color="red" data-size="xl">
             <span className="ladda-label">+Add ANIMATED GIF</span>
           </button>
-        </div>
-      </section>
+        </form>
+      </div>
     );
   }
 }
