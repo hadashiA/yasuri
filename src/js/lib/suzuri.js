@@ -1,6 +1,6 @@
-var $ = require('jquery');
+import $ from 'jquery';
 
-var endpoint = 'https://suzuri.jp/api/v1/';
+const ENDPOINT = 'https://suzuri.jp/api/v1/';
 
 var getToken = function() {
   var localStorage = window.localStorage,
@@ -18,14 +18,14 @@ var getToken = function() {
   return token;
 };
 
-var request = exports.request = function(method, path, data) {
+var request = function(method, path, data) {
   var token = getToken();
   
   return new Promise(function(resolve, reject) {
     var options = {
       type: method,
       dataType: 'json',
-      url: endpoint + path,
+      url: ENDPOINT + path,
       headers: { 'Authorization': 'Bearer ' + token }
     };
 
@@ -47,4 +47,8 @@ var request = exports.request = function(method, path, data) {
         reject(res.status);
       });
   });
+};
+
+export default {
+  request: request
 };

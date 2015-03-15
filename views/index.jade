@@ -6,28 +6,6 @@ html
   body
     header
       h1 YASURI
-    div#message-tape
-    div#indicator
-      img(src="/img/indicator.gif")
-
-    section.scene.upload-scene
-      p.user
-        span Hello&nbsp;
-        span.user-name
-        img.user-avatar(width="30", height="30")
-      div.uploader
-        input(type="file", style="display:none")
-        button.ladda-button(data-style="expand-right", data-color="red", data-size="xl")
-          span.ladda-label +ADD ANIMATED GIF
-      section.result
-        div
-          img.source(width="100", height="100", style="display:none;")
-          img.preview(width="100", height="100", style="display:none;")
-        ul.products
-    section.scene.signin-scene
-      a(href="#{authorizeUrl}") Sign in SUZURI
-
-    footer
-      address &copy; 目の細かいヤスリで削るゾくん
+    div#content(data-authorize-url="#{authorizeUrl}")
     script(src="/js/libgif.js")
     script(src="/js/bundle.js")
