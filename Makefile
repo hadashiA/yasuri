@@ -7,7 +7,7 @@ ifneq ($(wildcard src/js/lib),)
   SRC += $(shell find src/js/lib -type f -name '*.js')
 endif
 
-.PHONY: all clean info watch
+.PHONY: all clean info
 
 all: $(BUNDLE)
 
@@ -17,12 +17,9 @@ clean:
 info:
 	@echo "Source:" $(SRC)
 
-watch:
-	./node_modules/.bin/watchify -o $(BUNDLE) -s $(EXPORT) $(ENTRY) &
-
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 $(BUNDLE): $(BUILD_DIR)
-	./node_modules/.bin/browserify $(ENTRY) -o $@
+	./node_modules/.bin/browserify $(ENTRY) -t baberify -o $@
 
