@@ -20,6 +20,6 @@ info:
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-$(BUNDLE): $(BUILD_DIR)
-	./node_modules/.bin/browserify $(ENTRY) -t baberify -o $@
+$(BUNDLE): $(BUILD_DIR) $(SRC)
+	./node_modules/.bin/browserify $(ENTRY) -t babelify --debug --verbose -o $@
 
