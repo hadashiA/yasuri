@@ -108,12 +108,10 @@ class UploadLayout extends React.Component {
                 });
               }
             });
+          gif.move_relative(1);
         }
       });
     };
-  }
-
-  postFrame() {
   }
 
   render() {
