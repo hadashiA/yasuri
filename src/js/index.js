@@ -173,7 +173,7 @@ class Yasuri extends React.Component {
         this.setState({ user: body.user });
       })
       .catch(() => {
-        this.setState({ user: null });
+        this.setState({ user: {} });
       });
   }
 
