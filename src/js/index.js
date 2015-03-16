@@ -16,13 +16,26 @@ class Profile extends React.Component {
 }
 
 class UploadLayout extends React.Component {
+  handleClick(e) {
+    e.preventDefault();
+    React.findDOMNode(this.refs.file).click();
+  }
+
+  handleFile(e) {
+    var file = e.target.files[0];
+    console.log(file);
+  }
+
   render() {
+    var handleClick = this.handleClick.bind(this),
+        handleFile  = this.handleFile.bind(this);
+
     return (
       <div>
         <Profile user={this.props.user} />
         <form className="uploader">
-          <input type="file" />
-          <button className="ladda-button" data-style="expand-right" data-color="red" data-size="xl">
+          <input type="file" onChange={handleFile} ref="file" />
+          <button className="ladda-button" data-style="expand-right" data-color="red" data-size="xl" onClick={handleClick}>
             <span className="ladda-label">+Add ANIMATED GIF</span>
           </button>
         </form>
@@ -90,11 +103,6 @@ var contentNode = document.getElementById('content'),
 
 React.render(<Yasuri authorizeUrl={authorizeUrl} />, contentNode);
 
-// var signinScene = function() {
-//   $('.scene').hide();
-//   $('.signin-scene').show();
-// };
-
 // var uploadScene = function(user) {
 //   var $user = $('.user'),
 //       $button   = $('.uploader button'),
@@ -140,11 +148,6 @@ React.render(<Yasuri authorizeUrl={authorizeUrl} />, contentNode);
 //         });
 //       });
 //   };
-
-//   $('.scene').hide();
-
-//   $user.find('.user-name').text(user.name);
-//   $user.find('.user-avatar').prop('src', user.avatarUrl);
 
 //   $('.upload-scene').show();
 

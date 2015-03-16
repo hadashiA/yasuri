@@ -2,6 +2,10 @@
   display: none;
 }
 
+input[type=file] {
+  display: none;
+}
+
 #message-tape {
   /* top: 50%; */
   background: #f1c40f;
