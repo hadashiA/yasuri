@@ -18,22 +18,22 @@ class Profile extends React.Component {
 class FrameList extends React.Component {
   render() {
     var productsNode = this.props.frames.map(function(frame) {
-      var background = {
-        backgroundColor: frame.material.dominantRgb
-      };
+      var material = frame.material,
+          product  = frame.products[0],
+          background = {
+            backgroundColor: material.dominantRgb
+          };
 
       return (
         <li>
-          <a href="{frame.product.sampleUrl}" style={background} target="_blank">
-            <img src="{frame.product.sampleImageUrl}" width="323" height="323" />
+          <a href={product.sampleUrl} style={background} target="_blank">
+            <img src={product.sampleImageUrl} width="323" height="323" />
           </a>
         </li>
       );
     });
 
-    return (
-      <ul>{productsNode}</ul>
-    );
+    return <ul>{productsNode}</ul>;
   }
 }
 
@@ -69,7 +69,7 @@ class UploadLayout extends React.Component {
           img = document.getElementById('gif-canvas'),
           gif;
       
-      this.setState({ sourceDataUrl: dataUrl });
+      this.setState({ sourceDataUrl: dataUrl, frames: [] });
 
       img.src = dataUrl;
       gif = new SuperGif({
@@ -86,9 +86,28 @@ class UploadLayout extends React.Component {
         for (i = 0; i < length; i++) {
           let frameNumber = i,
               dataUrl = canvas.toDataURL();
-          promise.then(() => {
-            
-          });
+          promise = promise
+            .then(() => {
+              return suzuri.request('POST', 'materials', {
+                texture: dataUrl,
+                title: `${file.name} (${i + 1}コマ目)`,
+                products: [
+                  { itemId: 1, published: true, resizeMode: 'contain' }
+                ]
+              });
+            })
+            .then((body) => {
+              this.setState({ frames: this.state.frames.concat(body)});
+              if (i >= (length - 1)) {
+                this.button.stop();
+                return Promise.resolve();
+              } else {
+                this.setProgress((i + 1) / length);
+                return new Promise(function(resolve) {
+                  setTimeout(resolve, 2000);
+                });
+              }
+            });
         }
       });
     };
