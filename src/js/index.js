@@ -15,31 +15,111 @@ class Profile extends React.Component {
   }
 }
 
+class FrameList extends React.Component {
+  render() {
+    var productsNode = this.props.frames.map(function(frame) {
+      var background = {
+        backgroundColor: frame.material.dominantRgb
+      };
+
+      return (
+        <li>
+          <a href="{frame.product.sampleUrl}" style={background} target="_blank">
+            <img src="{frame.product.sampleImageUrl}" width="323" height="323" />
+          </a>
+        </li>
+      );
+    });
+
+    return (
+      <ul>{productsNode}</ul>
+    );
+  }
+}
+
 class UploadLayout extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      frames: [],
+      sourceDataUrl: null
+    };
+  }
+
+  componentDidMount() {
+    var buttonNode = React.findDOMNode(this.refs.button);
+    this.button = Ladda.create(buttonNode);
+  }
+
   handleClick(e) {
     e.preventDefault();
     React.findDOMNode(this.refs.file).click();
   }
 
   handleFile(e) {
-    var file = e.target.files[0];
-    console.log(file);
+    var file    = e.target.files[0],
+        reader  = new FileReader,
+        promise = Promise.resolve();
+    
+    this.button.start();
+
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      var dataUrl = e.target.result,
+          img = document.getElementById('gif-canvas'),
+          gif;
+      
+      this.setState({ sourceDataUrl: dataUrl });
+
+      img.src = dataUrl;
+      gif = new SuperGif({
+        gif: img,
+        auto_play: false,
+        loop_mode: false,
+        draw_while_loading: false
+      });
+      gif.load(() => {
+        var length = gif.get_length(),
+            canvas = gif.get_canvas(),
+            i;
+        
+        for (i = 0; i < length; i++) {
+          let frameNumber = i,
+              dataUrl = canvas.toDataURL();
+          promise.then(() => {
+            
+          });
+        }
+      });
+    };
+  }
+
+  postFrame() {
   }
 
   render() {
     var handleClick = this.handleClick.bind(this),
-        handleFile  = this.handleFile.bind(this);
+        handleFile  = this.handleFile.bind(this),
+        sourceImgNode = null;
+
+    if (this.state.sourceDataUrl) {
+      sourceImgNode = <img src={this.state.sourceDataUrl} height="100" />;
+    }
 
     return (
-      <div>
+      <section>
         <Profile user={this.props.user} />
         <form className="uploader">
           <input type="file" onChange={handleFile} ref="file" />
-          <button className="ladda-button" data-style="expand-right" data-color="red" data-size="xl" onClick={handleClick}>
+          <button className="ladda-button" data-style="expand-right" data-color="red" data-size="xl" onClick={handleClick} ref="button">
             <span className="ladda-label">+Add ANIMATED GIF</span>
           </button>
         </form>
-      </div>
+        <div>
+          {sourceImgNode}
+        </div>
+        <FrameList frames={this.state.frames} />
+      </section>
     );
   }
 }
@@ -102,129 +182,3 @@ var contentNode = document.getElementById('content'),
     authorizeUrl = contentNode.dataset.authorizeUrl;
 
 React.render(<Yasuri authorizeUrl={authorizeUrl} />, contentNode);
-
-// var uploadScene = function(user) {
-//   var $user = $('.user'),
-//       $button   = $('.uploader button'),
-//       $input    = $('.uploader input[type=file]'),
-//       $products = $('.products'),
-//       button    = Ladda.create($button[0]);
-
-//   var startCreateMaterialFromFrame = function(filename, frameNumber, dataURL) {
-//     var $li  = $(document.createElement('li'))
-//           .appendTo($products);
-
-//     var $a = $(document.createElement('a'))
-//           .prop('target', '_blank')
-//           .css({ display: 'block', width: '323px', height: '323px' })
-//           .appendTo($li);
-
-//     var $img = $(document.createElement('img'))
-//           .prop('id', filename + '-' + frameNumber)
-//           .addClass('product-image')
-//           .css({ width: 323, height: 323 });
-
-//     return suzuri.request('POST', 'materials', {
-//       texture: dataURL,
-//       title: filename + ' (' + (frameNumber + 1) + 'コマ目)',
-//       products: [
-//         { itemId: 1, published: true, resizeMode: 'contain' }
-//       ]
-//     })
-//       .then(function(body) {
-//         var material = body.material,
-//             product  = body.products[0];
-        
-//         $img
-//           .prop('src', product.sampleImageUrl)
-//           .appendTo($a);
-//         $a
-//           .prop('href', product.sampleUrl)
-//           .css('backgroundColor', material.dominantRgb)
-//           .appendTo($li);
-
-//         return new Promise(function(resolve) {
-//           setTimeout(resolve, 2000);
-//         });
-//       });
-//   };
-
-//   $('.upload-scene').show();
-
-//   $input.on('change', function(e) {
-//     var file        = this.files[0],
-//         reader      = new FileReader,
-//         promise     = Promise.resolve(),
-//         $sourceImg  = $('.source'),
-//         $previewImg = $('.preview');
-
-//     if (file.type !== 'image/gif') {
-//       alert(file.name + ' is not a gif.');
-//       return;
-//     }
-
-//     $products.empty();
-//     button.start();
-//     reader.readAsDataURL(file);
-//     reader.onload = function(e) {
-//       var gif;
-      
-//       $sourceImg.prop('src', e.target.result).show();
-//       $previewImg.prop('src', e.target.result);
-
-//       gif = new SuperGif({
-//         gif: $sourceImg[0],
-//         auto_play: false,
-//         loop_mode: false,
-//         draw_while_loading: false
-//       });
-//       gif.load(function() {
-//         var length = gif.get_length(),
-//             canvas = gif.get_canvas(),
-//             i;
-        
-//         for (i = 0; i< length; i++) {
-//           (function() {
-//             var frameNumber = i,
-//                 dataURL = canvas.toDataURL();
-//             promise = promise.then(function() {
-//               return startCreateMaterialFromFrame(file.name, frameNumber, dataURL);
-//             });
-
-//             promise.then(function() {
-//               button.setProgress((i + 1) / length);
-//             });
-
-//             if (i >= (length - 1)) {
-//               promise.then(function() {
-//                 $('.jsgif').hide();
-//                 $previewImg.show();
-//                 button.stop();
-//               });
-//             }
-//             gif.move_relative(1);
-//           })();
-//         }
-//       });
-//     };
-//   });
-
-//   $button.on('click', function(e) {
-//     $input.click();
-//   });
-// };
-
-
-// $(function() {
-//   var $indicator = $('#indicator');
-
-//   suzuri.request('GET', 'user')
-//     .then(function(body) {
-//       $indicator.hide();
-//       uploadScene(body.user);
-//     })
-//     .catch(function() {
-//       $indicator.hide();
-//       signinScene();
-//     });
-// });
