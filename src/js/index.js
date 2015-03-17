@@ -1,5 +1,4 @@
 import React from 'react';
-import $ from 'jquery';
 import Ladda from 'ladda';
 import suzuri from './lib/suzuri';
 
